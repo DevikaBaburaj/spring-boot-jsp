@@ -5,14 +5,10 @@ pipeline {
         maven '3.8.5'
     }
     
-    parameters {
-        string(name: 'SERVER_IP', defaultValue: '127.0.0.1', description: 'Provide production server IP Address.')
-    }
-
     stages {
         stage('Source') {
             steps {
-                git branch: 'main', changelog: false, credentialsId: 'github', poll: false, url: 'https://github.com/ajilraju/spring-boot-jsp.git'
+                git branch: 'batch-4', changelog: false, credentialsId: 'token1', poll: false, url: 'https://github.com/DevikaBaburaj/spring-boot-jsp.git'
             }
         }
         stage('Test') {
@@ -26,10 +22,13 @@ pipeline {
             }
         }
         stage('Copying Artifcats') {
+            environment{
+                PUB_KEY = credentials('pubkey')
+            }
             steps {
                 sh '''
                     version=$(perl -nle 'print "$1" if /<version>(v\\d+\\.\\d+\\.\\d+)<\\/version>/' pom.xml)
-                    rsync -avzP target/news-${version}.jar root@${SERVER_IP}:/opt/
+                    rsync -avzP target/news-${version}.jar root@52.66.201.38:~/
                 '''
             }
         }
