@@ -2,9 +2,9 @@ pipeline {
     agent any
 
     tools {
-        maven '3.8.5'
+        maven 'mvn-3.8.5'
     }
-    
+
     stages {
         stage('Source') {
             steps {
@@ -26,10 +26,9 @@ pipeline {
                 PUB_KEY = credentials('pubkey')
             }
             steps {
-                sh '''
+                    sh '''
                     version=$(perl -nle 'print "$1" if /<version>(v\\d+\\.\\d+\\.\\d+)<\\/version>/' pom.xml)
-                    rsync -avzP target/news-${version}.jar root@52.66.201.38:~/
-                '''
+                    '''
             }
         }
     }
