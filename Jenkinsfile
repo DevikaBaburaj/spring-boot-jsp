@@ -28,7 +28,7 @@ pipeline {
             steps {
                     sh '''
                     version=$(perl -nle 'print "$1" if /<version>(v\\d+\\.\\d+\\.\\d+)<\\/version>/' pom.xml)
-                    rsync -e "ssh -o StrictHostKeyChecking=no" -arvc target/news-${version}.jar ubuntu@65.0.92.160:~/
+                    rsync -e "ssh -o StrictHostKeyChecking=no -i ${PUB_KEY}" -arvc target/news-${version}.jar ubuntu@65.0.92.160:~/
                     '''
             }
         }
